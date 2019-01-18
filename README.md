@@ -28,8 +28,6 @@ Next, we retrieve the first three city names, stored as the `'City'` attribute o
 ```python
 import matplotlib.pyplot as plt
 
-%matplotlib inline
-
 x_values = [cities[0]['City'], cities[1]['City'], cities[2]['City']]
 y_values = [cities[0]['Population'], cities[1]['Population'], cities[2]['Population']]
  
@@ -39,6 +37,10 @@ plt.title('City Populations')
  
 plt.show()
 ```
+
+
+    <Figure size 640x480 with 1 Axes>
+
 
 Of course, as you may have spotted, there is a good amount of repetition in displaying this data.  Just take a look at how we retrieved the data for our `x_values` and `y_values`. And you'll notice that, unless we know the exact number of cities and populations in our excel file, this method of retrieving data might miss some data or try to access values that don't exist. 
 
@@ -65,13 +67,30 @@ buenos_aires
 ```
 
 
+
+
+    {'City': 'Buenos Aires',
+     'Country': 'Argentina',
+     'Population': 2891000,
+     'Area': 4758}
+
+
+
+
 ```python
 # here we want to find just the area of buenos_aires
-buenos_aires_area = None
+buenos_aires_area = buenos_aires['Area']
 # code goes here
 
 buenos_aires_area
 ```
+
+
+
+
+    4758
+
+
 
 Now that we have a bit more familiarity with our dictionaries, we can move on to gathering all the information we need to create our traces. 
 
@@ -79,18 +98,44 @@ Our `cities` list contains information about the top 12 cities.  For our upcomin
 
 
 ```python
-city_indices = None
+city_indices = list(range(len(cities))) # <- this is 12
 city_indices # [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
 ```
+
+
+
+
+    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+
+
 
 Now, using the `cities` list, we want to create a list of the names for each city. Loop through each city and append it's name (`'City'`) to the `city_names` list. 
 
 
 ```python
 city_names = []
-
+for x in cities:
+    city_names.append(x["City"])
 city_names
 ```
+
+
+
+
+    ['Buenos Aires',
+     'Toronto',
+     'Pyeongchang',
+     'Marakesh',
+     'Albuquerque',
+     'Los Cabos',
+     'Greenville',
+     'Archipelago Sea',
+     'Walla Walla Valley',
+     'Salina Island',
+     'Solta',
+     'Iguazu Falls']
+
+
 
 Your task is to assign the variable `names_and_ranks` to a list, with each element equal to the city name and it's corresponding rank.  For example, the first element would be, `"1. Buenos Aires"` and the second would be `"2. Toronto"`. Luckily for us, the list of cities that we read from our excel file is already in order my most populous to least. So, all we need to do is add numbers 1 through 12 to the beginning of each city name.
 
@@ -99,17 +144,41 @@ Use a `for` loop and the lists `city_indices` and `city_names` to accomplish thi
 
 ```python
 names_and_ranks = []
-
+for index in city_indices:
+    names_and_ranks.append(f"{index + 1}. {city_names[index]}")
 names_and_ranks
 # write a for loop that adds the properly formatted string to the names_and_ranks list
 ```
 
 
+
+
+    ['1. Buenos Aires',
+     '2. Toronto',
+     '3. Pyeongchang',
+     '4. Marakesh',
+     '5. Albuquerque',
+     '6. Los Cabos',
+     '7. Greenville',
+     '8. Archipelago Sea',
+     '9. Walla Walla Valley',
+     '10. Salina Island',
+     '11. Solta',
+     '12. Iguazu Falls']
+
+
+
+
 ```python
 print(names_and_ranks[0]) # '1. Buenos Aires'
 print(names_and_ranks[1]) # '2. Toronto'
-print(names_and_ranks[-1]) # '12. Iguazu Falls'
+print(names_and_ranks[-1]) # '12. Iguazu Falls' # we need to fix this
 ```
+
+    1. Buenos Aires
+    2. Toronto
+    12. Iguazu Falls
+
 
 Ok, now use another for loop to iterate through our list of `cities` and create a new list called `city_populations` that had the population for each city (`Population`).
 
@@ -122,11 +191,34 @@ city_populations # use a for loop to iterate through the list of cities with the
 ```
 
 
+
+
+    [2891000,
+     2800000,
+     2581000,
+     928850,
+     559277,
+     287651,
+     84554,
+     60000,
+     32237,
+     4000,
+     1700,
+     0]
+
+
+
+
 ```python
 print(city_populations[0]) # 2891000
 print(city_populations[1]) # 2800000
 print(city_populations[-1]) # 0
 ```
+
+    2891000
+    2800000
+    0
+
 
 Great! Now we can begin to plot this data. Again, we'll used matplotlib to create a bar graph with our cities and their respective population data. To do this, we use the `.bar()` function and pass in our x-axis and y-axis values, add a label and title (if we want), and finally we call the `.show()` method from matplotlib to view our new bar graph. 
 
@@ -141,12 +233,26 @@ plt.title('City Populations')
 plt.show()
 ```
 
+
+![png](index_files/index_26_0.png)
+
+
 Now we want declare a variable called `city_areas` that points to a list of all of the areas of the cities.  Let's use a `for` loop to iterate through our `cities` and have `city_areas` equal to each area of the city.  
 
 
 ```python
 city_areas = []
+for city in cities:
+    city_areas.append(city["Area"])
+city_areas
 ```
+
+
+
+
+    [4758, 2731, 3194, 200, 491, 3750, 68, 8300, 33, 27, 59, 672]
+
+
 
 Now that we have the city areas and populations, let's plot them to see how the size of each city compares to its population. 
 
@@ -163,6 +269,10 @@ plt.show()
 ```
 
 
+![png](index_files/index_30_0.png)
+
+
+
 ```python
 plt.bar(names_and_ranks, city_areas)
 plt.ylabel('Area')
@@ -172,6 +282,10 @@ plt.xticks(rotation='vertical')
  
 plt.show()
 ```
+
+
+![png](index_files/index_31_0.png)
+
 
 ### Summary
 
